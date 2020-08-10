@@ -26,8 +26,7 @@ class VisualDialog(nn.Module):
         
         self.answer_decoder = self.__init_decoder()
         self.answer_linear = nn.Linear(
-            2 * self.hidden_size + 2 * self.hidden_size + self.feature_extractor_dim + self.hidden_size * self.hidden_layers * 2,
-            self.vocabulary_size)
+            2 * self.hidden_size + 2 * self.hidden_size + self.feature_extractor_dim + self.hidden_size * self.hidden_layers * 2, self.vocabulary_size)
     
     def __init_encoder(self):
         return nn.LSTM(
@@ -106,7 +105,7 @@ class VisualDialog(nn.Module):
         v: (TIME_STEPS, HIDDEN_DIM)
         """
         energy = torch.mm(k, q.t()).squeeze(1) # (TIME_STEPS)
-        attention = nn.functional.softmax(energy) # (TIME_STEPS)
+        attention = nn.functional.softmax(energy, dim=-1) # (TIME_STEPS)
         context = torch.mm(attention.unsqueeze(0), v) # (1, HIDDEN_DIM)
         return context
     
